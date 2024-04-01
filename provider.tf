@@ -9,7 +9,7 @@ terraform {
  resource_group_name  =  "rg1we1modu61"
  storage_account_name =  "sa1wemod62"
     container_name       = "ct1we1mod61"
-    key                  = "Dev7.terraform.tfstate"  # navn til tfstate i azure container
+    key                  = "Stage7.terraform.tfstate"  # navn til tfstate i azure container
   }
 }
 

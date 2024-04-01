@@ -60,7 +60,7 @@ resource "azurerm_storage_blob" "blob1" {
   storage_account_name   = azurerm_storage_account.sa1.name
   storage_container_name ="$web"# azurerm_storage_container.storageContainer.name
   type                   = "Block"
-  content_type           ="txt/html"
+  content_type           ="html"   #"text/html" dersom man vil ha nedlastbare dokument isted for kun web tekst
   source_content         = local.source_content
 }
 
@@ -74,6 +74,8 @@ output "primary_web_endpoint" {
 terraform workspace list      -lister ut tilgjengelig workspaces
 terraform workspace new dev    -Lager en ny workspace med navnet dev
 terraform workspace select dev   - Endrer gjeldende workspace til å stå i dev
+terraform workspace dele dev      -sleter angitt dev workspace
+terraform workspace show          -viser gjeldende workspace
 
 data "azurerm_client_config" "current" {}
 
