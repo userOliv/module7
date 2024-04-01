@@ -41,3 +41,12 @@ variable "source_content"{
 
 
 }
+
+variable "index_document"{
+     type        = string
+  description = "storage account navn"
+  default     =  "index.php"
+
+
+
+}

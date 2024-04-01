@@ -6,10 +6,10 @@ terraform {
     }
   }
    backend "azurerm" {  # kopierer tfstate file til azure container
-  resource_group_name  =  "rg1we1modu61"
+ resource_group_name  =  "rg1we1modu61"
  storage_account_name =  "sa1wemod62"
     container_name       = "ct1we1mod61"
-    key                  = "Dev.terraform.tfstate"   # navn til tfstate i azure container
+    key                  = "Dev7.terraform.tfstate"  # navn til tfstate i azure container
   }
 }
 

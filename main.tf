@@ -1,13 +1,25 @@
 
 
+locals{ #dersom workspace sufiksen ikke er default gis det ut gjeldende workspace ellers default
+workspace-sufiksen= terraform.workspace=="default"?"":"${terraform.workspace}"
 
+rgName ="${var.rgName}-${local.workspace-sufiksen}"
+source_content="${var.source_content}-${local.workspace-sufiksen}"
+
+}
+
+resource "random_string" "randomString" {
+  length = 8
+  upper  = false
+  special = false
+}
 
  
 
 resource "azurerm_resource_group" "rgrup" {
 
   # count    = length(var.rgName)
-  name     = var.rgName
+  name     = local.rgName # Benytter ombygd rgname tillagt workspace-sufiksen
   location = var.location
   # tags     = local.tags
   
@@ -15,13 +27,22 @@ resource "azurerm_resource_group" "rgrup" {
 }
 
 
+output "rgName" {
+ value=azurerm_resource_group.rgrup.name 
+}
+
+
 resource "azurerm_storage_account" "sa1" {
-  name                     = var.sa
-  resource_group_name      =var.rgName # azurerm_resource_group.example.name
+  name                     ="${var.sa}${random_string.randomString.result}"
+  resource_group_name      =local.rgName # azurerm_resource_group.example.name
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
   # tags = local.tags
+
+  static_website {
+    index_document = var.index_document
+  }
 }
 
 
@@ -35,12 +56,12 @@ resource "azurerm_storage_account" "sa1" {
 
 
 resource "azurerm_storage_blob" "blob1" {
-  name                   =var.blobname
+  name                   =var.index_document
   storage_account_name   = azurerm_storage_account.sa1.name
   storage_container_name ="$web"# azurerm_storage_container.storageContainer.name
   type                   = "Block"
   content_type           ="txt/html"
-  source_content         = var.source_content
+  source_content         = local.source_content
 }
 
 output "primary_web_endpoint" {
@@ -50,6 +71,9 @@ output "primary_web_endpoint" {
 
 /*
 
+terraform workspace list      -lister ut tilgjengelig workspaces
+terraform workspace new dev    -Lager en ny workspace med navnet dev
+terraform workspace select dev   - Endrer gjeldende workspace til å stå i dev
 
 data "azurerm_client_config" "current" {}
 
